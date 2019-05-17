@@ -43,10 +43,12 @@
                 (let ((tile (make-tile (elt (elt data y) x) map)))
                   (setf (aref grid y x) tile)))
          finally
-           (setf world (make-instance 'world :map map :grid grid)
+           (setf world (make-instance 'world
+                                      :map map
+                                      :grid grid
+                                      :player-initial-position player-initial-position)
                  game-state (make-instance 'game
-                                           :world world
-                                           :player-initial-position player-initial-position))))))
+                                           :world world))))))
 
 (defmethod draw ((this deserted))
   (with-slots (game-state) this

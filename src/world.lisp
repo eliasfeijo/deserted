@@ -3,10 +3,13 @@
 
 (defclass world ()
   ((map :initarg :map :reader map-of)
-   (grid :initarg :grid)))
+   (grid :initarg :grid)
+   (player-initial-position :initarg :player-initial-position)
+   (player :reader player-of)))
 
 (defmethod initialize-instance :after ((this world) &key)
-  (with-slots (map grid) this
+  (with-slots (map grid player player-initial-position) this
+    (setf player (make-instance 'player :position player-initial-position))
     (let ((real-map-height
            (*
             (height-of map)

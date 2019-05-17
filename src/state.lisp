@@ -12,10 +12,28 @@
 
 (defclass game (game-state)
   ((world :initarg :world)
-   (player-initial-position :initarg :player-initial-position)))
+   (camera)))
+
+(defmethod initialize-instance :after ((this game) &key)
+  (with-slots (world camera) this
+    (let ((real-map-width (*
+                           (width-of (map-of world))
+                           (tile-width-of (map-of world))))
+          (real-map-height (*
+                            (height-of (map-of world))
+                            (tile-height-of (map-of world)))))
+      (setf camera (make-instance 'camera
+                                  :target (player-of world)
+                                  :map-width real-map-width
+                                  :map-height real-map-height)))
+    (update-camera camera)))
+      
 
 (defmethod render ((this game))
-  (with-slots (world) this
-    (render world)))
+  (with-slots (world camera) this
+    (with-pushed-canvas ()
+      (translate-canvas (- (x (offset-of camera)))
+			(- (y (offset-of camera))))
+      (render world))))
 
 
