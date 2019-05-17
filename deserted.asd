@@ -8,4 +8,5 @@
     :pathname "src/"
     :components ((:file "packages")
                  (:file "util")
+                 (:file "state")
                  (:file "main")))
