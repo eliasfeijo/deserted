@@ -3,8 +3,8 @@
 
 (defgame deserted ()
   ()
-  (:viewport-width 800)
-  (:viewport-height 600)
+  (:viewport-width *viewport-width*)
+  (:viewport-height *viewport-height*)
   (:viewport-title "Deserted"))
 
 (defun play (&optional blocking)

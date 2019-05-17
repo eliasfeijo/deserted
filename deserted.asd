@@ -7,4 +7,5 @@
     :serial t
     :pathname "src/"
     :components ((:file "packages")
+                 (:file "util")
                  (:file "main")))
