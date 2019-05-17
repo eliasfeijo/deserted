@@ -8,4 +8,4 @@
 (defparameter *white* (vec4 1 1 1 1))
 (defparameter *black* (vec4 0 0 0 1))
 
-(defparameter *assets-path* (asdf:system-relative-pathname :tiled-test "assets/"))
+(defparameter *assets-path* (asdf:system-relative-pathname :deserted "assets/"))

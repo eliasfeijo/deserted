@@ -3,10 +3,15 @@
     :version "0.0.1"
     :author "Elias Feijó"
     :license "MIT"
-    :depends-on (alexandria bodge-utilities trivial-gamekit)
+    :depends-on (alexandria
+                 bodge-utilities
+                 trivial-gamekit
+                 cxml
+                 cl-csv)
     :serial t
     :pathname "src/"
     :components ((:file "packages")
                  (:file "util")
+                 (:file "tmx-parser")
                  (:file "state")
                  (:file "main")))
