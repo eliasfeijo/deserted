@@ -10,6 +10,17 @@
 
 (defparameter *assets-path* (asdf:system-relative-pathname :deserted "assets/"))
 
+;;; Rendering
+
+(defgeneric render (object)
+  (:method (object) (declare (ignore object))))
+
+(defclass renderable () ())
+
+(defmethod render :around ((this renderable))
+  (with-pushed-canvas ()
+    (call-next-method)))
+
 ;;; Positioning
 
 (defgeneric (setf position-of) (vec2 positionable))
@@ -21,4 +32,3 @@
 (defmethod (setf position-of) ((vec vec2) (this positionable))
   (setf (x (position-of this)) (x vec)
         (y (position-of this)) (y vec)))
-
