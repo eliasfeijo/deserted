@@ -13,5 +13,7 @@
     :components ((:file "packages")
                  (:file "util")
                  (:file "tmx-parser")
+                 (:file "tile")
+                 (:file "world")
                  (:file "state")
                  (:file "main")))

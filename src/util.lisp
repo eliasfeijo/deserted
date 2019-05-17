@@ -9,3 +9,16 @@
 (defparameter *black* (vec4 0 0 0 1))
 
 (defparameter *assets-path* (asdf:system-relative-pathname :deserted "assets/"))
+
+;;; Positioning
+
+(defgeneric (setf position-of) (vec2 positionable))
+
+(defclass positionable ()
+  ((position
+    :initform (vec2 0 0) :initarg :position :reader position-of)))
+
+(defmethod (setf position-of) ((vec vec2) (this positionable))
+  (setf (x (position-of this)) (x vec)
+        (y (position-of this)) (y vec)))
+
