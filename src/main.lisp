@@ -24,7 +24,19 @@
   (declare (ignore resource-names))
   (with-slots (game-state map grid world) this
     (let* ((layer1 (aref (layers-of map) 0))
-           (data (data-of layer1)))
+           (data (data-of layer1))
+           (player-initial-position (vec2 0 0))
+           (real-map-height
+            (*
+             (height-of map)
+             (tile-height-of map))))
+      (loop for object-group across (object-groups-of map) do
+           (loop for object across (objects-of object-group) do
+                (with-slots (name x y height) object
+                  (cond
+                    ((string-equal name "player_spawn_position")
+                     (setf player-initial-position
+                           (vec2 x (- real-map-height y height))))))))
       (setf grid (make-array (list (height-of map) (width-of map)) :initial-contents data))
       (loop for y from 0 below (height-of map) do
            (loop for x from 0 below (width-of map) do
@@ -32,7 +44,9 @@
                   (setf (aref grid y x) tile)))
          finally
            (setf world (make-instance 'world :map map :grid grid)
-                 game-state (make-instance 'game :world world))))))
+                 game-state (make-instance 'game
+                                           :world world
+                                           :player-initial-position player-initial-position))))))
 
 (defmethod draw ((this deserted))
   (with-slots (game-state) this

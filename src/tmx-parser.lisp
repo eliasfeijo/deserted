@@ -44,7 +44,7 @@
 (defclass object-group ()
   ((id :initarg :id)
   (name :initarg :name :reader name-of)
-  (objects :initarg :objects)))
+  (objects :initarg :objects :reader objects-of)))
 
 (defun parse-tmx (file-path)
   (let* ((document (cxml:parse-file file-path (cxml-dom:make-dom-builder)))
