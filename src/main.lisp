@@ -5,7 +5,9 @@
 
 (defgame deserted ()
   ((game-state)
-   (map :initform nil))
+   (map :initform nil)
+   (grid :initform nil)
+   (world :initform nil))
   (:viewport-width *viewport-width*)
   (:viewport-height *viewport-height*)
   (:viewport-title "Deserted")
@@ -15,7 +17,22 @@
   (with-slots (game-state map) this
     (setf game-state (make-instance 'resource-preparation)
           map (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
-    (format t "~%Map loaded: ~a" map)))
+    (prepare-resources
+     'island)))
+
+(defmethod notice-resources ((this deserted) &rest resource-names)
+  (declare (ignore resource-names))
+  (with-slots (game-state map grid world) this
+    (let* ((layer1 (aref (layers-of map) 0))
+           (data (data-of layer1)))
+      (setf grid (make-array (list (height-of map) (width-of map)) :initial-contents data))
+      (loop for y from 0 below (height-of map) do
+           (loop for x from 0 below (width-of map) do
+                (let ((tile (make-tile (elt (elt data y) x) map)))
+                  (setf (aref grid y x) tile)))
+         finally
+           (setf world (make-instance 'world :map map :grid grid)
+                 game-state (make-instance 'game :world world))))))
 
 (defmethod draw ((this deserted))
   (with-slots (game-state) this
