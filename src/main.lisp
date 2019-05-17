@@ -1,6 +1,8 @@
 ;;;; main.lisp
 (cl:in-package :deserted)
 
+(register-resource-package :deserted *assets-path*)
+
 (defgame deserted ()
   ((game-state))
   (:viewport-width *viewport-width*)
