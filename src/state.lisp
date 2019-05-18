@@ -19,6 +19,8 @@
 
 (defmethod press-key ((this game) key)
   (with-slots (keyboard) this
+    (if (eql key :f5)
+        (setf *dev-mode* (not *dev-mode*)))
     (press-key keyboard key)))
 
 (defmethod release-key ((this game) key)
