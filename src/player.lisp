@@ -40,4 +40,6 @@
 		    'human-male-female
 		    :origin origin
 		    :width (- (x end) (x origin))
-		    :height (- (y end) (y origin)))))))
+		    :height (- (y end) (y origin)))
+  (with-dev-mode
+    (draw-rect real-position (x size) (y size) :stroke-paint *black*))))))

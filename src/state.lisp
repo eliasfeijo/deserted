@@ -82,6 +82,9 @@
       (translate-canvas (- (x (offset-of camera)))
                         (- (y (offset-of camera))))
       (render world))
-    (render fog)))
+    (render fog)
+    (with-dev-mode
+      (draw-line (vec2 (/ *viewport-width* 2) 0) (vec2 (/ *viewport-width* 2) *viewport-height*) (vec4 0 1 0 1))
+      (draw-line (vec2 0 (/ *viewport-height* 2)) (vec2 *viewport-width* (/ *viewport-height* 2)) (vec4 0 1 0 1)))))
 
 
