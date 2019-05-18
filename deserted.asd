@@ -14,6 +14,7 @@
                  (:file "util")
                  (:file "tmx-parser")
                  (:file "tile")
+                 (:file "fog")
                  (:file "animation")
                  (:file "animation-player")
                  (:file "player")

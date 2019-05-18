@@ -25,7 +25,8 @@
               (release-key game-state key)))))
     (prepare-resources
      'island
-     'human-male-female)))
+     'human-male-female
+     'fog)))
 
 (defmethod notice-resources ((this deserted) &rest resource-names)
   (declare (ignore resource-names))

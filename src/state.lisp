@@ -14,6 +14,7 @@
   ((world :initarg :world)
    (camera)
    (keyboard)
+   (fog :initform (make-instance 'fog))
    (last-updated :initform (real-time-seconds))))
 
 (defmethod press-key ((this game) key)
@@ -66,19 +67,21 @@
       (setf keyboard (make-instance 'keyboard :on-state-change #'update-moving-p-and-direction)))))
 
 (defmethod act ((this game))
-  (with-slots (world last-updated camera) this
+  (with-slots (world last-updated camera fog) this
     (let* ((current-time (real-time-seconds))
-	   (delta-time (- current-time last-updated)))
+           (delta-time (- current-time last-updated)))
       (if (moving-p (player-of world))
-	  (move (player-of world) delta-time))
+          (move (player-of world) delta-time))
       (update-camera camera)
+      (update-fog fog delta-time)
       (setf last-updated current-time))))
 
 (defmethod render ((this game))
-  (with-slots (world camera) this
+  (with-slots (world camera fog) this
     (with-pushed-canvas ()
       (translate-canvas (- (x (offset-of camera)))
                         (- (y (offset-of camera))))
-      (render world))))
+      (render world))
+    (render fog)))
 
 
