@@ -78,7 +78,7 @@
   (with-slots (world camera) this
     (with-pushed-canvas ()
       (translate-canvas (- (x (offset-of camera)))
-			(- (y (offset-of camera))))
+                        (- (y (offset-of camera))))
       (render world))))
 
 
