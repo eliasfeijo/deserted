@@ -10,6 +10,13 @@
 
 (defparameter *assets-path* (asdf:system-relative-pathname :deserted "assets/"))
 
+(defparameter *dev-mode* nil)
+
+(defmacro with-dev-mode (&body body)
+  `(if *dev-mode*
+       (progn
+         ,@body)))
+
 (alexandria:define-constant +diagonal-unit+ 0.70710677
   :test #'=)
 
