@@ -13,7 +13,8 @@
 (defclass game (game-state)
   ((world :initarg :world)
    (camera)
-   (keyboard)))
+   (keyboard)
+   (last-updated :initform (real-time-seconds))))
 
 (defmethod press-key ((this game) key)
   (with-slots (keyboard) this
@@ -63,7 +64,15 @@
                  (setf (moving-p (player-of world)) t
                        (direction-of (player-of world)) result)))))
       (setf keyboard (make-instance 'keyboard :on-state-change #'update-moving-p-and-direction)))))
-      
+
+(defmethod act ((this game))
+  (with-slots (world last-updated camera) this
+    (let* ((current-time (real-time-seconds))
+	   (delta-time (- current-time last-updated)))
+      (if (moving-p (player-of world))
+	  (move (player-of world) delta-time))
+      (update-camera camera)
+      (setf last-updated current-time))))
 
 (defmethod render ((this game))
   (with-slots (world camera) this

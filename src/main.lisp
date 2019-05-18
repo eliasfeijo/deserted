@@ -57,6 +57,10 @@
                  game-state (make-instance 'game
                                            :world world))))))
 
+(defmethod act ((this deserted))
+  (with-slots (game-state) this
+    (act game-state)))
+
 (defmethod draw ((this deserted))
   (with-slots (game-state) this
     (render game-state)))
