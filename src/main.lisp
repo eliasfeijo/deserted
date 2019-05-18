@@ -17,6 +17,12 @@
   (with-slots (game-state map) this
     (setf game-state (make-instance 'resource-preparation)
           map (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
+    (bind-any-button
+     (lambda (key state)
+       (cond ((eql state :pressed)
+              (press-key game-state key))
+             ((eql state :released)
+              (release-key game-state key)))))
     (prepare-resources
      'island
      'human-male-female)))

@@ -12,10 +12,38 @@
 
 (defclass game (game-state)
   ((world :initarg :world)
-   (camera)))
+   (camera)
+   (keyboard)))
+
+(defmethod press-key ((this game) key)
+  (with-slots (keyboard) this
+    (press-key keyboard key)))
+
+(defmethod release-key ((this game) key)
+  (with-slots (keyboard) this
+    (release-key keyboard key)))
+
+(defun process-movement-input (keyboard)
+  (cond
+    ((key-combination-pressed-p keyboard :w :d)
+     'northeast)
+    ((key-combination-pressed-p keyboard :s :d)
+     'southeast)
+    ((key-combination-pressed-p keyboard :a :s)
+     'southwest)
+    ((key-combination-pressed-p keyboard :a :w)
+     'northwest)
+    ((key-combination-pressed-p keyboard :w)
+     'north)
+    ((key-combination-pressed-p keyboard :a)
+     'west)
+    ((key-combination-pressed-p keyboard :s)
+     'south)
+    ((key-combination-pressed-p keyboard :d)
+     'east)))
 
 (defmethod initialize-instance :after ((this game) &key)
-  (with-slots (world camera) this
+  (with-slots (world camera keyboard) this
     (let ((real-map-width (*
                            (width-of (map-of world))
                            (tile-width-of (map-of world))))
@@ -26,7 +54,15 @@
                                   :target (player-of world)
                                   :map-width real-map-width
                                   :map-height real-map-height)))
-    (update-camera camera)))
+    (update-camera camera)
+    (labels
+        ((update-moving-p-and-direction (keyboard)
+           (let ((result (process-movement-input keyboard)))
+             (if (null result)
+                 (setf (moving-p (player-of world)) nil)
+                 (setf (moving-p (player-of world)) t
+                       (direction-of (player-of world)) result)))))
+      (setf keyboard (make-instance 'keyboard :on-state-change #'update-moving-p-and-direction)))))
       
 
 (defmethod render ((this game))

@@ -86,3 +86,28 @@
       (setf position (vec2
 		      (funcall floor-or-ceiling-x (x real-position))
 		      (funcall floor-or-ceiling-y (y real-position)))))))
+
+;;; Keyboard
+
+(defclass keyboard ()
+  ((pressed-keys :initform nil :reader key-combination-of)
+   (state-listener :initarg :on-state-change)))
+
+(defun %invoke-state-listener (keyboard)
+  (with-slots (state-listener) keyboard
+    (when state-listener
+      (funcall state-listener keyboard))))
+
+(defmethod press-key ((keyboard keyboard) key)
+  (with-slots (pressed-keys state-listener) keyboard
+    (push key pressed-keys)
+    (%invoke-state-listener keyboard)))
+
+(defmethod release-key ((keyboard keyboard) key)
+  (with-slots (pressed-keys) keyboard
+    (alexandria:deletef pressed-keys key)
+    (%invoke-state-listener keyboard)))
+
+(defun key-combination-pressed-p (keyboard &rest keys)
+  (with-slots (pressed-keys) keyboard
+    (alexandria:set-equal (intersection pressed-keys keys) keys)))
