@@ -13,6 +13,10 @@
 (alexandria:define-constant +diagonal-unit+ 0.70710677
   :test #'=)
 
+;; Elapsed time in seconds
+(defun real-time-seconds ()
+  (/ (get-internal-real-time) internal-time-units-per-second))
+
 ;;; Rendering
 
 (defgeneric render (object)

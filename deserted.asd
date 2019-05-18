@@ -14,6 +14,8 @@
                  (:file "util")
                  (:file "tmx-parser")
                  (:file "tile")
+                 (:file "animation")
+                 (:file "animation-player")
                  (:file "player")
                  (:file "camera")
                  (:file "world")
