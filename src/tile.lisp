@@ -63,35 +63,73 @@
           (tile-width (tile-width-of tileset))
           (tile-height (tile-height-of tileset)))
       (with-pushed-canvas ()
-        (if (and flipped-horizontally-p flipped-vertically-p)
-            (progn
-              (setf real-position
-                    (vec2
-                     (+
-                      (- (x position))
-                      (- tile-width))
-                     (+
-                      (- (y position))
-                      (- tile-height))))
-              (scale-canvas -1 -1))
-            (if flipped-horizontally-p
-                (progn
-                  (setf real-position
-                        (vec2
-                         (+
-                          (- (x position))
-                          (- tile-width))
-                         (y position)))
-                  (scale-canvas -1 1))
-                (if flipped-vertically-p
-                    (progn
-                      (setf real-position
-                            (vec2
-                             (x position)
-                             (+
-                              (- (y position))
-                              (- tile-height))))
-                      (scale-canvas 1 -1)))))
+        (cond
+          (flipped-diagonally-p
+           (rotate-canvas (- (/ pi 2)))
+           (setf real-position (vec2 (+
+                                      (- (y position))
+                                      (- tile-height))
+                                     (x position)))
+           (if (and flipped-horizontally-p flipped-vertically-p)
+               (progn
+                 (scale-canvas -1 -1)
+                 (setf real-position
+                       (vec2
+                        (+
+                         (- (x real-position))
+                         (- tile-width))
+                        (+
+                         (- (y real-position))
+                         (- tile-height)))))
+               (if flipped-horizontally-p
+                   (progn
+                     (scale-canvas -1 1)
+                     (setf real-position
+                           (vec2
+                            (+
+                             (- (x real-position))
+                             (- tile-width))
+                            (y real-position))))
+                   (if flipped-vertically-p
+                       (progn
+                         (scale-canvas -1 -1)
+                         (setf real-position
+                               (vec2
+                                (+
+                                 (- (x real-position))
+                                 (- tile-width))
+                                (+
+                                 (- (y real-position))
+                                 (- tile-height)))))))))
+          (flipped-horizontally-p
+           (if flipped-vertically-p
+               (progn
+                 (scale-canvas -1 -1)
+                 (setf real-position
+                       (vec2
+                        (+
+                         (- (x real-position))
+                         (- tile-width))
+                        (+
+                         (- (y real-position))
+                         (- tile-height)))))
+               (progn
+                 (scale-canvas -1 1)
+                 (setf real-position
+                       (vec2
+                        (+
+                         (- (x real-position))
+                         (- tile-width))
+                        (y real-position))))))
+          (flipped-vertically-p
+           (progn
+             (scale-canvas 1 -1)
+             (setf real-position
+                   (vec2
+                    (x real-position)
+                    (+
+                     (- (y real-position))
+                     (- tile-height)))))))
         (draw-image
          real-position
          tileset-image
