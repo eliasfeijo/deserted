@@ -18,7 +18,8 @@
     (setf game-state (make-instance 'resource-preparation)
           map (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
     (prepare-resources
-     'island)))
+     'island
+     'human-male-female)))
 
 (defmethod notice-resources ((this deserted) &rest resource-names)
   (declare (ignore resource-names))

@@ -32,9 +32,10 @@
                    (tileset-image-of tile) tileset-image)))))))
 
 (defmethod render ((this world))
-  (with-slots (map grid) this
+  (with-slots (map grid player) this
     ;; Will do the rendering from the bottom-left corner of screen
     (loop for y downfrom (- (height-of map) 1) to 0 do
-	 (loop for x from 0 below (width-of map) do
-	      (let ((tile (aref grid y x)))
-		(render tile))))))
+         (loop for x from 0 below (width-of map) do
+              (let ((tile (aref grid y x)))
+                (render tile))))
+    (render player)))
