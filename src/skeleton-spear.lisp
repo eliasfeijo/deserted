@@ -4,16 +4,16 @@
 (defclass skeleton-spear (movable renderable)
   ((velocity :initform (vec2 100 100))
    (size :initform (vec2 64 64))
-   (vision-area :initform 50)
+   (vision-range :initform 50)
    (aggro :initform nil)))
 
 (defun update-skeleton-spear (skeleton world)
-  (with-slots (position size vision-area aggro) skeleton
+  (with-slots (position size vision-range aggro) skeleton
     (let ((vision-rect (vec4
-                        (- (x position) vision-area)
-                        (- (y position) vision-area)
-                        (+ (* 2 vision-area) (x size))
-                        (+ (* 2 vision-area) (y size))))
+                        (- (x position) vision-range)
+                        (- (y position) vision-range)
+                        (+ (* 2 vision-range) (x size))
+                        (+ (* 2 vision-range) (y size))))
           (player-rect (vec4
                         (x (position-of (player-of world)))
                         (y (position-of (player-of world)))
@@ -23,7 +23,7 @@
           (setf aggro t)))))
 
 (defmethod render ((this skeleton-spear))
-  (with-slots (position size vision-area aggro) this
+  (with-slots (position size vision-range aggro) this
     (let* ((anim *skeleton-buried*)
            (frame (get-frame anim (real-time-seconds)))
            (origin (keyframe-origin frame))
@@ -41,9 +41,9 @@
                    (vec4 1 0 0 0.3)
                    (vec4 0 1 0 0.3))))
           (draw-rect (vec2
-                      (- (x position) vision-area)
-                      (- (y position) vision-area))
-                     (+ (* 2 vision-area) (x size))
-                     (+ (* 2 vision-area) (y size))
+                      (- (x position) vision-range)
+                      (- (y position) vision-range))
+                     (+ (* 2 vision-range) (x size))
+                     (+ (* 2 vision-range) (y size))
                      :fill-paint fill-color))))))
     
