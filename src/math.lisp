@@ -9,3 +9,9 @@
            (> (+ (y rect1) (w rect1)) (y rect2))
            (< (y rect1) (+ (y rect2) (w rect2))))
           t)))
+
+(defun distance (origin target)
+  (let ((difference (subt origin target)))
+    (sqrt (+
+           (* (x difference) (x difference))
+           (* (y difference) (y difference))))))

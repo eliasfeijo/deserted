@@ -41,10 +41,17 @@
                (setf state 'moving
                      state-started (real-time-seconds)
                      current-animation (resolve-skeleton-moving-animation direction))))
+          ;;; moving -> attacking
           ((eql state 'moving)
            (setf direction (target-direction position (position-of (player-of world)))
                  current-animation (resolve-skeleton-moving-animation direction))
-           (move skeleton delta-time)))))))
+           (move skeleton delta-time)
+           (if (< (distance
+                   (position-of skeleton)
+                   (position-of (player-of world)))
+                  30)
+               (setf state 'attacking
+                     state-started (real-time-seconds)))))))))
 
 (defmethod render ((this skeleton-spear))
   (with-slots (position size vision-range aggro current-animation) this
