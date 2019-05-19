@@ -7,6 +7,21 @@
   (make-animation '(((* 5 64) (* 0 64) (* 6 64) (* 1 64) 0 nil nil))
                   0 :looped-p nil))
 
+(defparameter *skeleton-rise*
+  (make-animation '(((* 5 64) (* 0 64) (* 6 64) (* 1 64) 0
+                     nil nil)
+                    ((* 4 64) (* 0 64) (* 5 64) (* 1 64) 0.125
+                     nil nil)
+                    ((* 3 64) (* 0 64) (* 4 64) (* 1 64) 0.25
+                     nil nil)
+                    ((* 2 64) (* 0 64) (* 3 64) (* 1 64) 0.375
+                     nil nil)
+                    ((* 1 64) (* 0 64) (* 2 64) (* 1 64) 0.5
+                     nil nil)
+                    ((* 0 64) (* 0 64) (* 1 64) (* 1 64) 0.625
+                     nil nil))
+                  0.75 :looped-p nil))
+
 (defparameter *skeleton-walking-east*
   (make-animation '(((* 0 64) (* 9 64) (* 1 64) (* 10 64) 0
                      nil nil)
