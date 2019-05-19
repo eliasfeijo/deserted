@@ -46,5 +46,9 @@
               (let ((tile (aref grid y x)))
                 (render tile))))
     (loop for enemy across enemies do
-         (render enemy))
-    (render player)))
+         (when (>= (y (position-of enemy)) (y (position-of player)))
+           (render enemy)))
+    (render player)
+    (loop for enemy across enemies do
+         (when (< (y (position-of enemy)) (y (position-of player)))
+           (render enemy)))))
