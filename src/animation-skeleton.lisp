@@ -105,3 +105,22 @@
                     ((* 8 64) (* 12 64) (* 9 64) (* 13 64) 1.0
                      nil nil))
                   1.125 :looped-p t))
+
+(defun resolve-skeleton-moving-animation (direction)
+  (cond
+    ((eql direction 'south)
+	   *skeleton-walking-south*)
+	  ((eql direction 'north)
+	   *skeleton-walking-north*)
+	  ((eql direction 'west)
+	   *skeleton-walking-west*)
+	  ((eql direction 'east)
+	   *skeleton-walking-east*)
+	  ((eql direction 'southwest)
+	   *skeleton-walking-west*)
+	  ((eql direction 'southeast)
+	   *skeleton-walking-east*)
+	  ((eql direction 'northwest)
+	   *skeleton-walking-west*)
+	  ((eql direction 'northeast)
+	   *skeleton-walking-east*)))

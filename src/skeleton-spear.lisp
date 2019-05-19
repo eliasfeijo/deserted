@@ -11,7 +11,7 @@
    (current-animation :initform *skeleton-buried*)))
 
 (defun update-skeleton-spear (skeleton world)
-  (with-slots (position size vision-range aggro
+  (with-slots (position size vision-range aggro direction
                         state state-started current-animation)
       skeleton
     (let ((vision-rect (vec4
@@ -27,11 +27,20 @@
       (if (intersect-p vision-rect player-rect)
           (setf aggro t))
       (when aggro
-        (cond ((eql state 'buried)
-                 (setf state 'rising
+        (cond
+          ;;; buried -> rising
+          ((eql state 'buried)
+           (setf state 'rising
+                 state-started (real-time-seconds)
+                 current-animation *skeleton-rise*)
+           (start-animation current-animation state-started))
+          ;;; rising -> moving
+          ((eql state 'rising)
+           (if (animation-finished-p
+                current-animation (real-time-seconds))
+               (setf state 'moving
                      state-started (real-time-seconds)
-                     current-animation *skeleton-rise*)
-               (start-animation current-animation state-started)))))))
+                     current-animation (resolve-skeleton-moving-animation direction)))))))))
 
 (defmethod render ((this skeleton-spear))
   (with-slots (position size vision-range aggro current-animation) this

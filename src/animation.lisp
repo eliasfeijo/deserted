@@ -28,6 +28,13 @@
                                          :element-type 'keyframe
                                          :initial-contents frames))))
 
+(defun animation-finished-p (animation current-time)
+  (with-slots (started animation-length) animation
+    (if (or
+         (eql 0 animation-length)
+         (>= (- current-time started) animation-length))
+        t)))
+
 (defun start-animation (animation current-time)
   (with-slots (started) animation
     (setf started current-time)))
