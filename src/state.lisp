@@ -74,6 +74,8 @@
            (delta-time (- current-time last-updated)))
       (if (moving-p (player-of world))
           (move (player-of world) delta-time))
+      (loop for enemy across (enemies-of world) do
+           (update-skeleton-spear enemy world))
       (update-camera camera)
       (update-fog fog delta-time)
       (setf last-updated current-time))))

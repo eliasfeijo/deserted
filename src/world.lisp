@@ -5,7 +5,8 @@
   ((map :initarg :map :reader map-of)
    (grid :initarg :grid)
    (skeleton-spawn-positions :initarg :skeleton-spawn-positions)
-   (enemies :initform (make-array 0 :fill-pointer 0 :adjustable t))
+   (enemies :initform (make-array 0 :fill-pointer 0 :adjustable t)
+            :reader enemies-of)
    (player-initial-position :initarg :player-initial-position)
    (player :reader player-of)))
 
