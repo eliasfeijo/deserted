@@ -26,7 +26,8 @@
     (prepare-resources
      'island
      'human-male-female
-     'fog)))
+     'fog
+     'skeleton-spear)))
 
 (defmethod notice-resources ((this deserted) &rest resource-names)
   (declare (ignore resource-names))
@@ -34,6 +35,7 @@
     (let* ((layer1 (aref (layers-of map) 0))
            (data (data-of layer1))
            (player-initial-position (vec2 0 0))
+           (skeleton-spawn-positions (make-array 0 :fill-pointer 0 :adjustable t))
            (real-map-height
             (*
              (height-of map)
@@ -44,7 +46,9 @@
                   (cond
                     ((string-equal name "player_spawn_position")
                      (setf player-initial-position
-                           (vec2 x (- real-map-height y height))))))))
+                           (vec2 x (- real-map-height y height))))
+                    ((string-equal name "skeleton_spawn_position")
+                     (vector-push-extend (vec2 x (- real-map-height y height)) skeleton-spawn-positions))))))
       (setf grid (make-array (list (height-of map) (width-of map)) :initial-contents data))
       (loop for y from 0 below (height-of map) do
            (loop for x from 0 below (width-of map) do
@@ -54,7 +58,8 @@
            (setf world (make-instance 'world
                                       :map map
                                       :grid grid
-                                      :player-initial-position player-initial-position)
+                                      :player-initial-position player-initial-position
+                                      :skeleton-spawn-positions skeleton-spawn-positions)
                  game-state (make-instance 'game
                                            :world world))))))
 

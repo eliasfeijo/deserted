@@ -16,8 +16,8 @@
 
 (defun make-animation (sequence animation-length &key looped-p)
   (let ((frames (loop for (x-orig y-orig x-end y-end time flipped-x flipped-y) in (sort sequence #'< :key #'fifth)
-                   collect (make-keyframe :origin (vec2 x-orig y-orig)
-                                          :end (vec2 x-end y-end)
+                   collect (make-keyframe :origin (vec2 (eval x-orig) (eval y-orig))
+                                          :end (vec2 (eval x-end) (eval y-end))
                                           :time (bodge-util:f time)
 					  :flipped-x flipped-x
 					  :flipped-y flipped-y))))

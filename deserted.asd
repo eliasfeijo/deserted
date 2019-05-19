@@ -16,6 +16,8 @@
                  (:file "tile")
                  (:file "fog")
                  (:file "animation")
+                 (:file "animation-skeleton")
+                 (:file "skeleton-spear")
                  (:file "animation-player")
                  (:file "player")
                  (:file "camera")

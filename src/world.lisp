@@ -4,11 +4,15 @@
 (defclass world ()
   ((map :initarg :map :reader map-of)
    (grid :initarg :grid)
+   (skeleton-spawn-positions :initarg :skeleton-spawn-positions)
+   (enemies :initform (make-array 0 :fill-pointer 0 :adjustable t))
    (player-initial-position :initarg :player-initial-position)
    (player :reader player-of)))
 
 (defmethod initialize-instance :after ((this world) &key)
-  (with-slots (map grid player player-initial-position) this
+  (with-slots (map grid player player-initial-position
+                   enemies skeleton-spawn-positions)
+      this
     (setf player (make-instance 'player :position player-initial-position))
     (let ((real-map-height
            (*
@@ -29,13 +33,17 @@
                           (name-of (image-of (tileset-of tile)))))))
                   (setf
                    (position-of tile) (vec2 position-x position-y)
-                   (tileset-image-of tile) tileset-image)))))))
+                   (tileset-image-of tile) tileset-image)))))
+    (loop for spawn-position across skeleton-spawn-positions do
+         (vector-push-extend (make-instance 'skeleton-spear :position spawn-position) enemies))))
 
 (defmethod render ((this world))
-  (with-slots (map grid player) this
+  (with-slots (map grid player enemies) this
     ;; Will do the rendering from the bottom-left corner of screen
     (loop for y downfrom (- (height-of map) 1) to 0 do
          (loop for x from 0 below (width-of map) do
               (let ((tile (aref grid y x)))
                 (render tile))))
+    (loop for enemy across enemies do
+         (render enemy))
     (render player)))
