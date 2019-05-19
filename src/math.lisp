@@ -1,6 +1,11 @@
 ;;;; math.lisp
 (cl:in-package :deserted)
 
+(defun center-of (rect)
+  (vec2
+   (+ (x rect) (/ (z rect) 2))
+   (+ (y rect) (/ (w rect) 2))))
+
 (defun intersect-p (rect1 rect2)
   (if (and
        (> (+ (x rect1) (z rect1)) (x rect2))

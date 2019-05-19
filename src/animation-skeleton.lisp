@@ -106,6 +106,82 @@
                      nil nil))
                   1.125 :looped-p t))
 
+(defparameter *skeleton-attacking-east*
+  (make-animation '(((* 0 64) (* 13 64) (* 1 64) (* 14 64) 0
+                     nil nil)
+                    ((* 1 64) (* 13 64) (* 2 64) (* 14 64) 0.125
+                     nil nil)
+                    ((* 2 64) (* 13 64) (* 3 64) (* 14 64) 0.25
+                     nil nil)
+                    ((* 3 64) (* 13 64) (* 4 64) (* 14 64) 0.375
+                     nil nil)
+                    ((* 4 64) (* 13 64) (* 5 64) (* 14 64) 0.5
+                     nil nil)
+                    ((* 5 64) (* 13 64) (* 6 64) (* 14 64) 0.625
+                     nil nil)
+                    ((* 6 64) (* 13 64) (* 7 64) (* 14 64) 0.75
+                     nil nil)
+                    ((* 7 64) (* 13 64) (* 8 64) (* 14 64) 0.875
+                     nil nil))
+                  1 :looped-p nil))
+
+(defparameter *skeleton-attacking-south*
+  (make-animation '(((* 0 64) (* 14 64) (* 1 64) (* 15 64) 0
+                     nil nil)
+                    ((* 1 64) (* 14 64) (* 2 64) (* 15 64) 0.125
+                     nil nil)
+                    ((* 2 64) (* 14 64) (* 3 64) (* 15 64) 0.25
+                     nil nil)
+                    ((* 3 64) (* 14 64) (* 4 64) (* 15 64) 0.375
+                     nil nil)
+                    ((* 4 64) (* 14 64) (* 5 64) (* 15 64) 0.5
+                     nil nil)
+                    ((* 5 64) (* 14 64) (* 6 64) (* 15 64) 0.625
+                     nil nil)
+                    ((* 6 64) (* 14 64) (* 7 64) (* 15 64) 0.75
+                     nil nil)
+                    ((* 7 64) (* 14 64) (* 8 64) (* 15 64) 0.875
+                     nil nil))
+                  1 :looped-p nil))
+
+(defparameter *skeleton-attacking-west*
+  (make-animation '(((* 0 64) (* 15 64) (* 1 64) (* 16 64) 0
+                     nil nil)
+                    ((* 1 64) (* 15 64) (* 2 64) (* 16 64) 0.125
+                     nil nil)
+                    ((* 2 64) (* 15 64) (* 3 64) (* 16 64) 0.25
+                     nil nil)
+                    ((* 3 64) (* 15 64) (* 4 64) (* 16 64) 0.375
+                     nil nil)
+                    ((* 4 64) (* 15 64) (* 5 64) (* 16 64) 0.5
+                     nil nil)
+                    ((* 5 64) (* 15 64) (* 6 64) (* 16 64) 0.625
+                     nil nil)
+                    ((* 6 64) (* 15 64) (* 7 64) (* 16 64) 0.75
+                     nil nil)
+                    ((* 7 64) (* 15 64) (* 8 64) (* 16 64) 0.875
+                     nil nil))
+                  1 :looped-p nil))
+
+(defparameter *skeleton-attacking-north*
+  (make-animation '(((* 0 64) (* 16 64) (* 1 64) (* 17 64) 0
+                     nil nil)
+                    ((* 1 64) (* 16 64) (* 2 64) (* 17 64) 0.125
+                     nil nil)
+                    ((* 2 64) (* 16 64) (* 3 64) (* 17 64) 0.25
+                     nil nil)
+                    ((* 3 64) (* 16 64) (* 4 64) (* 17 64) 0.375
+                     nil nil)
+                    ((* 4 64) (* 16 64) (* 5 64) (* 17 64) 0.5
+                     nil nil)
+                    ((* 5 64) (* 16 64) (* 6 64) (* 17 64) 0.625
+                     nil nil)
+                    ((* 6 64) (* 16 64) (* 7 64) (* 17 64) 0.75
+                     nil nil)
+                    ((* 7 64) (* 16 64) (* 8 64) (* 17 64) 0.875
+                     nil nil))
+                  1 :looped-p nil))
+
 (defun resolve-skeleton-moving-animation (direction)
   (cond
     ((eql direction 'south)
@@ -124,3 +200,22 @@
 	   *skeleton-walking-west*)
 	  ((eql direction 'northeast)
 	   *skeleton-walking-east*)))
+
+(defun resolve-skeleton-attacking-animation (direction)
+  (cond
+    ((eql direction 'south)
+	   *skeleton-attacking-south*)
+	  ((eql direction 'north)
+	   *skeleton-attacking-north*)
+	  ((eql direction 'west)
+	   *skeleton-attacking-west*)
+	  ((eql direction 'east)
+	   *skeleton-attacking-east*)
+	  ((eql direction 'southwest)
+	   *skeleton-attacking-west*)
+	  ((eql direction 'southeast)
+	   *skeleton-attacking-east*)
+	  ((eql direction 'northwest)
+	   *skeleton-attacking-west*)
+	  ((eql direction 'northeast)
+	   *skeleton-attacking-east*)))
