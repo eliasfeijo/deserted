@@ -12,6 +12,7 @@
     :pathname "src/"
     :components ((:file "packages")
                  (:file "util")
+                 (:file "math")
                  (:file "tmx-parser")
                  (:file "tile")
                  (:file "fog")
