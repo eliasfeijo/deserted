@@ -87,6 +87,21 @@
     (render fog)
     (with-dev-mode
       (draw-line (vec2 (/ *viewport-width* 2) 0) (vec2 (/ *viewport-width* 2) *viewport-height*) (vec4 0 1 0 1))
-      (draw-line (vec2 0 (/ *viewport-height* 2)) (vec2 *viewport-width* (/ *viewport-height* 2)) (vec4 0 1 0 1)))))
+      (draw-line (vec2 0 (/ *viewport-height* 2)) (vec2 *viewport-width* (/ *viewport-height* 2)) (vec4 0 1 0 1))
+      (let* ((player-position-text
+              (format nil "x: ~d y: ~d"
+                      (x (position-of (player-of world)))
+                      (y (position-of (player-of world)))))
+             (player-map-position
+              (div
+               (position-of (player-of world))
+               (vec2 (tile-width-of (map-of world))
+                     (tile-height-of (map-of world)))))
+             (player-map-position-text
+              (format nil "x: ~d y: ~d"
+                      (ceiling (x player-map-position))
+                      (ceiling (y player-map-position)))))
+        (draw-text player-position-text (vec2 10 (- *viewport-height* 20)) :fill-color *black*)
+        (draw-text player-map-position-text (vec2 10 (- *viewport-height* 50)) :fill-color *black*)))))
 
 
