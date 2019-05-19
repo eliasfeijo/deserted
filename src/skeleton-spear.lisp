@@ -2,7 +2,7 @@
 (in-package :deserted)
 
 (defclass skeleton-spear (movable renderable)
-  ((velocity :initform (vec2 100 100))
+  ((velocity :initform (vec2 60 60))
    (size :initform (vec2 64 64))
    (vision-range :initform 50)
    (aggro :initform nil)
@@ -10,7 +10,7 @@
    (state-started :initform (real-time-seconds))
    (current-animation :initform *skeleton-buried*)))
 
-(defun update-skeleton-spear (skeleton world)
+(defun update-skeleton-spear (skeleton world delta-time)
   (with-slots (position size vision-range aggro direction
                         state state-started current-animation)
       skeleton
@@ -40,7 +40,11 @@
                 current-animation (real-time-seconds))
                (setf state 'moving
                      state-started (real-time-seconds)
-                     current-animation (resolve-skeleton-moving-animation direction)))))))))
+                     current-animation (resolve-skeleton-moving-animation direction))))
+          ((eql state 'moving)
+           (setf direction (target-direction position (position-of (player-of world)))
+                 current-animation (resolve-skeleton-moving-animation direction))
+           (move skeleton delta-time)))))))
 
 (defmethod render ((this skeleton-spear))
   (with-slots (position size vision-range aggro current-animation) this

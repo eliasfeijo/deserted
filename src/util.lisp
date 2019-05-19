@@ -118,3 +118,38 @@
 (defun key-combination-pressed-p (keyboard &rest keys)
   (with-slots (pressed-keys) keyboard
     (alexandria:set-equal (intersection pressed-keys keys) keys)))
+
+
+;;; Find direction of target
+
+(defun target-direction (origin target)
+  (cond
+    ;; Northeast
+    ((and (> (x target) (x origin))
+          (> (y target) (y origin)))
+     'northeast)
+    ;; Northwest
+    ((and (< (x target) (x origin))
+          (> (y target) (y origin)))
+     'northwest)
+    ;; Southeast
+    ((and (> (x target) (x origin))
+          (< (y target) (y origin)))
+     'southeast)
+    ;; Southwest
+    ((and (< (x target) (x origin))
+          (< (y target) (y origin)))
+     'southwest)
+    ;; East
+    ((> (x target) (x origin))
+     'east)
+    ;; West
+    ((< (x target) (x origin))
+     'west)
+    ;; North
+    ((> (y target) (y origin))
+     'north)
+    ;; South
+    ((< (y target) (y origin))
+     'south)
+    (t 'north)))
