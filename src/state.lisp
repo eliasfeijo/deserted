@@ -26,6 +26,11 @@
 (defmethod press-key ((this game) key)
   (with-slots (keyboard world) this
     (cond
+      ((eql key :escape)
+       (if (eql (state-of (player-of world)) 'dead)
+           (progn
+             (clear-world world)
+             (clear-game this))))
       ((eql key :f5)
        (setf *dev-mode* (not *dev-mode*)))
       ((eql key :space)
@@ -60,7 +65,10 @@
      'east)))
 
 (defmethod initialize-instance :after ((this game) &key)
-  (with-slots (world camera keyboard) this
+  (clear-game this))
+
+(defun clear-game (game)
+  (with-slots (world camera keyboard) game
     (let ((real-map-width (*
                            (width-of (map-of world))
                            (tile-width-of (map-of world))))

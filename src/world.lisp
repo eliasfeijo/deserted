@@ -5,16 +5,19 @@
   ((map :initarg :map :reader map-of)
    (grid :initarg :grid)
    (skeleton-spawn-positions :initarg :skeleton-spawn-positions)
-   (enemies :initform (make-array 0 :fill-pointer 0 :adjustable t)
-            :reader enemies-of)
+   (enemies :reader enemies-of)
    (player-initial-position :initarg :player-initial-position)
    (player :reader player-of)))
 
 (defmethod initialize-instance :after ((this world) &key)
+  (clear-world this))
+
+(defun clear-world (world)
   (with-slots (map grid player player-initial-position
                    enemies skeleton-spawn-positions)
-      this
-    (setf player (make-instance 'player :position player-initial-position))
+      world
+    (setf player (make-instance 'player :position player-initial-position)
+          enemies (make-array 0 :fill-pointer 0 :adjustable t))
     (let ((real-map-height
            (*
             (height-of map)
