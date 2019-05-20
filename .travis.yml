@@ -1,0 +1,47 @@
+language: common-lisp
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - zip
+
+env:
+  global:
+    - GAMEKIT_SYSTEM_NAME: pong
+    - GAMEKIT_APPLICATION_PACKAGE: deserted
+    - GAMEKIT_APPLICATION_MAIN_CLASS: deserted
+    - PATH: ~/bin/:$PATH
+    - GAMEKIT_TARGET_PACKAGE: $GAMEKIT_SYSTEM_NAME-x86-64-$TRAVIS_OS_NAME-$TRAVIS_BRANCH.zip
+    - GAMEKIT_BUILD_DIR: /tmp/$GAMEKIT_SYSTEM_NAME
+    - secure: "eIbbiQ5RTDhDS+Fb1lW7cEkcTzIn2rI5Tn1MAER/U1NJzjtbERAjOo0uzY4PYIt65zEY81MkDSO/K9Wti0rcdgJb397ZhN6d6AUjDPbR3yWChigjUJrecvJuJB4cI3DDWexhJFKLC4SqDB1XyrWXLULoazb9/lwH2XMhzT+o1a5dkiwGv7SaS36eeUTdO04u1BMy7fIT50l4tJrnevRFMwdhVTuaX10VY0LxhiAN1SIGOwwyhn5TeS4y9W1V9KO0oV7GHslw+ZTurEhFOmUVnfOHLONmsZ/VPrSkBesyp7k/xCvYLz2FpeIIIiTgWPcli7t8it0FXfQF13WfvA6DgI/GFZhUEDOv9l/1DFrzFpMmFK9qmrzfIGhuMaYPSiR5l7Ttgynkn2mpdF1can8gf+CNDB2y+TPf3yev3pWwi6hmm4k47oyiDz8YxNrn6+tSduw2lZWZiF+LBpTYYODxf/B4wxcwACdEtDSjNyD8C2ntJWGxQ+ndOJ+ivATkQ00R4LP71u63iVGSEaDQt4TMjqxQDxLHxgbsj9MdEZm5Zir16gxIAWwqQ6asDw/1kg8uWGjzbVcN2mMmRHPb9bcoYmuvPgnibeMRk0HTmrnOl/5mTTvEVxbmZk7ZCA0JxSyOE3Ot8N+KP+BQq4XXLxSCgDic6fYdJKWjHK5kYoGUVOU="
+
+branches:
+  only:
+    - "/^v\\d+(\\.\\d+)+$/"
+
+os:
+  - linux
+  - osx
+
+install:
+  - curl -L http://bodge.borodust.org/files/install.sh | sh
+
+script:
+  - >
+    lisp $HOME/bodge/scripts/build-gamekit-system.lisp
+    $GAMEKIT_SYSTEM_NAME $GAMEKIT_APPLICATION_PACKAGE $GAMEKIT_APPLICATION_MAIN_CLASS
+    $TRAVIS_BUILD_DIR
+    $GAMEKIT_BUILD_DIR
+
+before_deploy:
+  - mv "$GAMEKIT_BUILD_DIR/$GAMEKIT_SYSTEM_NAME.zip" $GAMEKIT_TARGET_PACKAGE
+
+deploy:
+  provider: releases
+  api-key: $GITHUB_TOKEN
+  file: $GAMEKIT_TARGET_PACKAGE
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true
