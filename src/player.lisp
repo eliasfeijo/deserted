@@ -8,7 +8,7 @@
    (state-started :initform (real-time-seconds))
    (current-animation :initform *player-idle-south*)))
 
-(defun update-player (player delta-time)
+(defun update-player (player world delta-time)
   (with-slots (state current-animation) player
     (cond
       ((eql state 'moving)
@@ -16,8 +16,77 @@
       ((eql state 'attacking)
        (when (animation-finished-p
               current-animation (real-time-seconds))
-         (set-state player 'idle))))))
-  
+         (set-state player 'idle)
+         (loop for enemy across (enemies-of world) do
+              (if (intersect-p
+                   (vec4
+                    (x (position-of enemy))
+                    (y (position-of enemy))
+                    (x (size-of enemy))
+                    (y (size-of enemy)))
+                   (resolve-player-attack-rect player))
+                  (kill-enemy enemy))))))))
+
+(defun resolve-player-attack-rect (player)
+  (with-slots (position size direction) player
+    (let ((center (center-of (vec4
+                              (x position) (y position)
+                              (x size) (y size)))))
+      (cond
+        ((eql direction 'northeast)
+         (vec4
+          (+ (x center) 5)
+          (+ (y center) 5)
+          30
+          30))
+        ((eql direction 'northwest)
+         (vec4
+          (- (x center) 35)
+          (+ (y center) 5)
+          30
+          30))
+        ((eql direction 'southeast)
+         (vec4
+          (+ (x center) 5)
+          (- (y center) 35)
+          30
+          30))
+        ((eql direction 'southwest)
+         (vec4
+          (- (x center) 35)
+          (- (y center) 35)
+          30
+          30))
+        ((eql direction 'north)
+         (vec4
+          (- (x center) 15)
+          (+ (y center) 5)
+          30
+          30))
+        ((eql direction 'east)
+         (vec4
+          (+ (x center) 5)
+          (- (y center) 20)
+          30
+          30))
+        ((eql direction 'west)
+         (vec4
+          (- (x center) 35)
+          (- (y center) 20)
+          25
+          30))
+        ((eql direction 'south)
+         (vec4
+          (- (x center) 15)
+          (- (y center) 35)
+          30
+          30))
+        (t
+         (vec4
+          (- (x center) 20)
+          (- (y center) 35)
+          40
+          30))))))
 
 (defun set-state (player new-state)
   (with-slots (state state-started current-animation
@@ -41,7 +110,7 @@
 
 (defmethod render ((this player))
   (with-slots (position direction size moving-p
-                        current-animation)
+                        current-animation state)
       this
     (let* ((frame (get-frame current-animation (real-time-seconds)))
            (origin (keyframe-origin frame))
@@ -77,4 +146,10 @@
                     :width (- (x end) (x origin))
                     :height (- (y end) (y origin)))
         (with-dev-mode
+          (if (eql state 'attacking)
+              (let ((attack-rect (resolve-player-attack-rect this)))
+                (draw-rect (vec2 (x attack-rect)
+                                 (y attack-rect))
+                           (z attack-rect) (w attack-rect)
+                           :fill-paint (vec4 1 0 0 0.5))))
           (draw-rect real-position (x size) (y size) :stroke-paint *black*))))))

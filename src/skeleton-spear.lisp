@@ -3,7 +3,7 @@
 
 (defclass skeleton-spear (movable renderable)
   ((velocity :initform (vec2 60 60))
-   (size :initform (vec2 64 64))
+   (size :initform (vec2 64 64) :reader size-of)
    (vision-range :initform 50)
    (aggro :initform nil)
    (state :initform 'buried)
@@ -153,6 +153,11 @@
           (- (y center) 35)
           15
           30))))))
+
+(defun kill-enemy (enemy)
+  (with-slots (state current-animation) enemy
+    (setf state 'dead
+          current-animation *skeleton-buried*)))
 
 (defmethod render ((this skeleton-spear))
   (with-slots (position size vision-range aggro current-animation

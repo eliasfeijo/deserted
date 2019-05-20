@@ -86,7 +86,7 @@
   (with-slots (world last-updated camera fog) this
     (let* ((current-time (real-time-seconds))
            (delta-time (- current-time last-updated)))
-      (update-player (player-of world) delta-time)
+      (update-player (player-of world) world delta-time)
       (loop for enemy across (enemies-of world) do
            (update-skeleton-spear enemy world delta-time))
       (update-camera camera)
