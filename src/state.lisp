@@ -29,8 +29,10 @@
       ((eql key :f5)
        (setf *dev-mode* (not *dev-mode*)))
       ((eql key :space)
-       (if (not (eql (state-of (player-of world))
-                     'attacking))
+       (if (and (not (eql (state-of (player-of world))
+                          'attacking))
+                (not (eql (state-of (player-of world))
+                          'dead)))
            (set-state (player-of world) 'attacking))))
     (press-key keyboard key)))
 
@@ -73,8 +75,10 @@
     (labels
         ((update-moving-p-and-direction (keyboard)
            (let ((result (process-movement-input keyboard)))
-             (if (not (eql (state-of (player-of world))
-                           'attacking))
+             (if (and (not (eql (state-of (player-of world))
+                                'attacking))
+                      (not (eql (state-of (player-of world))
+                                'dead)))
                  (if (null result)
                      (set-state (player-of world) 'idle)
                      (progn

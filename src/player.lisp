@@ -1,31 +1,43 @@
 ;;;; player.lisp
 (cl:in-package :deserted)
 
+(defconstant +player-max-hp+ 100)
+
 (defclass player (renderable movable)
   ((size :initform (vec2 64 64) :reader size-of)
    (velocity :initform (vec2 100 100))
    (state :initform 'idle :reader state-of)
    (state-started :initform (real-time-seconds))
-   (current-animation :initform *player-idle-south*)))
+   (current-animation :initform *player-idle-south*)
+   (hp :initform +player-max-hp+)))
 
 (defun update-player (player world delta-time)
   (with-slots (state current-animation) player
-    (cond
-      ((eql state 'moving)
-       (move player delta-time))
-      ((eql state 'attacking)
-       (when (animation-finished-p
-              current-animation (real-time-seconds))
-         (set-state player 'idle)
-         (loop for enemy across (enemies-of world) do
-              (if (intersect-p
-                   (vec4
-                    (x (position-of enemy))
-                    (y (position-of enemy))
-                    (x (size-of enemy))
-                    (y (size-of enemy)))
-                   (resolve-player-attack-rect player))
-                  (kill-enemy enemy))))))))
+    (unless (eql state 'dead)
+      (cond
+        ((eql state 'moving)
+         (move player delta-time))
+        ((eql state 'attacking)
+         (when (animation-finished-p
+                current-animation (real-time-seconds))
+           (set-state player 'idle)
+           (loop for enemy across (enemies-of world) do
+                (if (intersect-p
+                     (vec4
+                      (x (position-of enemy))
+                      (y (position-of enemy))
+                      (x (size-of enemy))
+                      (y (size-of enemy)))
+                     (resolve-player-attack-rect player))
+                    (kill-enemy enemy)))))))))
+
+(defun take-damage-player (player damage)
+  (with-slots (hp state) player
+    (unless (eql state 'dead)
+      (setf hp (- hp damage))
+      (if (<= hp 0)
+          (progn
+            (set-state player 'dead))))))
 
 (defun resolve-player-attack-rect (player)
   (with-slots (position size direction) player
@@ -95,7 +107,7 @@
     (setf state new-state
           state-started (real-time-seconds)
           current-animation (resolve-player-animation state direction))
-    (if (eql state 'attacking)
+    (if (or (eql state 'attacking) (eql state 'dead))
         (start-animation current-animation state-started))))
 
 (defun resolve-player-animation (state direction)
@@ -105,12 +117,13 @@
     ((eql state 'moving)
      (resolve-player-moving-animation direction))
     ((eql state 'attacking)
-     (resolve-player-attacking-animation direction))))
+     (resolve-player-attacking-animation direction))
+    ((eql state 'dead) *player-dead*)))
       
 
 (defmethod render ((this player))
   (with-slots (position direction size moving-p
-                        current-animation state)
+                        current-animation state hp)
       this
     (let* ((frame (get-frame current-animation (real-time-seconds)))
            (origin (keyframe-origin frame))
@@ -145,6 +158,16 @@
                     :origin origin
                     :width (- (x end) (x origin))
                     :height (- (y end) (y origin)))
+        (draw-rect (vec2
+                    (x real-position)
+                    (- (y real-position) 10))
+                   (x size) 10
+                   :fill-paint (vec4 1 0 0 1))
+        (draw-rect (vec2
+                    (x real-position)
+                    (- (y real-position) 10))
+                   (max 0 (* (x size) (/ hp +player-max-hp+))) 10
+                   :fill-paint (vec4 0 1 0 1))
         (with-dev-mode
           (if (eql state 'attacking)
               (let ((attack-rect (resolve-player-attack-rect this)))

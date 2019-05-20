@@ -72,7 +72,12 @@
                       (resolve-spear-skeleton-attack-rect skeleton)
                       player-rect)
                      ;; collided
-                     (format t "~%collided")
+                     (progn
+                       (take-damage-player (player-of world)
+                                           (max 20 (random 51)))
+                       (setf state 'moving
+                             state-started (real-time-seconds)
+                             current-animation (resolve-skeleton-moving-animation direction)))
                      ;; else
                      (if (< (distance
                              (position-of skeleton)
