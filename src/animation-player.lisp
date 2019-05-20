@@ -3,6 +3,26 @@
 
 (define-image 'pirate "images/pirate.png")
 
+(defparameter *player-idle-east*
+  (make-animation '(((* 0 64) (* 9 64) (* 1 64) (* 10 64) 0
+                     nil nil))
+                  0 :looped-p nil))
+
+(defparameter *player-idle-south*
+  (make-animation '(((* 0 64) (* 10 64) (* 1 64) (* 11 64) 0
+                     nil nil))
+                  0 :looped-p nil))
+
+(defparameter *player-idle-west*
+  (make-animation '(((* 0 64) (* 11 64) (* 1 64) (* 12 64) 0
+                     nil nil))
+                  0 :looped-p nil))
+
+(defparameter *player-idle-north*
+  (make-animation '(((* 0 64) (* 12 64) (* 1 64) (* 13 64) 0
+                     nil nil))
+                  0 :looped-p nil))
+
 (defparameter *player-walking-east*
   (make-animation '(((* 0 64) (* 9 64) (* 1 64) (* 10 64) 0
                      nil nil)
@@ -146,7 +166,27 @@
                     ((* 5 64) (* 8 64) (* 6 64) (* 9 64) 0.625
                      nil nil))
                     0.75 :looped-p nil))
-  
+
+(defun resolve-player-idle-animation (direction)
+  (cond
+    ((eql direction 'south)
+	   *player-idle-south*)
+	  ((eql direction 'north)
+	   *player-idle-north*)
+	  ((eql direction 'west)
+	   *player-idle-west*)
+	  ((eql direction 'east)
+	   *player-idle-east*)
+	  ((eql direction 'southwest)
+	   *player-idle-west*)
+	  ((eql direction 'southeast)
+	   *player-idle-east*)
+	  ((eql direction 'northwest)
+	   *player-idle-west*)
+	  ((eql direction 'northeast)
+	   *player-idle-east*)))
+
+
 (defun resolve-player-moving-animation (direction)
   (cond
     ((eql direction 'south)

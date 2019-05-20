@@ -63,17 +63,17 @@
         ((update-moving-p-and-direction (keyboard)
            (let ((result (process-movement-input keyboard)))
              (if (null result)
-                 (setf (moving-p (player-of world)) nil)
-                 (setf (moving-p (player-of world)) t
-                       (direction-of (player-of world)) result)))))
+                 (set-state (player-of world) 'idle)
+                 (progn
+                   (setf (direction-of (player-of world)) result)
+                   (set-state (player-of world) 'moving))))))
       (setf keyboard (make-instance 'keyboard :on-state-change #'update-moving-p-and-direction)))))
 
 (defmethod act ((this game))
   (with-slots (world last-updated camera fog) this
     (let* ((current-time (real-time-seconds))
            (delta-time (- current-time last-updated)))
-      (if (moving-p (player-of world))
-          (move (player-of world) delta-time))
+      (update-player (player-of world) delta-time)
       (loop for enemy across (enemies-of world) do
            (update-skeleton-spear enemy world delta-time))
       (update-camera camera)
