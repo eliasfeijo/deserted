@@ -20,6 +20,7 @@
   ((world :initarg :world)
    (camera)
    (keyboard)
+   (game-over :initform nil)
    (fog :initform (make-instance 'fog))
    (last-updated :initform (real-time-seconds))))
 
@@ -95,18 +96,42 @@
       (setf keyboard (make-instance 'keyboard :on-state-change #'update-moving-p-and-direction)))))
 
 (defmethod act ((this game))
-  (with-slots (world last-updated camera fog) this
+  (with-slots (world last-updated camera fog game-over) this
     (let* ((current-time (real-time-seconds))
            (delta-time (- current-time last-updated)))
-      (update-player (player-of world) world delta-time)
-      (loop for enemy across (enemies-of world) do
-           (update-skeleton-spear enemy world delta-time))
-      (update-camera camera)
-      (update-fog fog delta-time)
-      (setf last-updated current-time))))
+      (unless game-over
+        (if (not (in-inventory-p (key-of world)))
+            (if (intersect-p (vec4
+                              (x (position-of (player-of world)))
+                              (y (position-of (player-of world)))
+                              (x (size-of (player-of world)))
+                              (y (size-of (player-of world))))
+                             (vec4
+                              (x (position-of (key-of world)))
+                              (y (position-of (key-of world)))
+                              (x (size-of (key-of world)))
+                              (y (size-of (key-of world)))))
+                (setf (in-inventory-p (key-of world)) t))
+            (if (intersect-p (vec4
+                              (x (position-of (player-of world)))
+                              (y (position-of (player-of world)))
+                              (x (size-of (player-of world)))
+                              (y (size-of (player-of world))))
+                             (vec4
+                              (x (position-of (chest-of world)))
+                              (y (position-of (chest-of world)))
+                              (x (size-of (chest-of world)))
+                              (y (size-of (chest-of world)))))
+                (setf game-over t)))
+        (update-player (player-of world) world delta-time)
+        (loop for enemy across (enemies-of world) do
+             (update-skeleton-spear enemy world delta-time))
+        (update-camera camera)
+        (update-fog fog delta-time)
+        (setf last-updated current-time)))))
 
 (defmethod render ((this game))
-  (with-slots (world camera fog) this
+  (with-slots (world camera fog game-over) this
     (with-pushed-canvas ()
       (translate-canvas (- (x (offset-of camera)))
                         (- (y (offset-of camera))))
@@ -129,6 +154,14 @@
                       (ceiling (x player-map-position))
                       (ceiling (y player-map-position)))))
         (draw-text player-position-text (vec2 10 (- *viewport-height* 20)) :fill-color *black*)
-        (draw-text player-map-position-text (vec2 10 (- *viewport-height* 50)) :fill-color *black*)))))
+        (draw-text player-map-position-text (vec2 10 (- *viewport-height* 50)) :fill-color *black*)))
+    (if game-over
+        (progn
+          (draw-rect (vec2 0 0) *viewport-width* *viewport-height*
+                     :fill-paint *black*)
+          (draw-text "Game Over."
+                     (vec2 350 400) :fill-color *white*)
+          (draw-text "Made by Elias Feijó"
+                     (vec2 320 370) :fill-color *white*)))))
 
 

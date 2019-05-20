@@ -2,11 +2,11 @@
 (cl:in-package :deserted)
 
 (defclass key (positionable)
-  ((size :initform (vec2 50 50))
+  ((size :initform (vec2 50 50) :reader size-of)
    (in-inventory-p :initform nil :accessor in-inventory-p)))
 
 (defclass chest (positionable)
-  ((size :initform (vec2 32 32))
+  ((size :initform (vec2 32 32) :reader size-of)
    (open-p :initform nil :accessor open-p)))
 
 (defclass world ()
@@ -65,7 +65,8 @@
          (loop for x from 0 below (width-of map) do
               (let ((tile (aref grid y x)))
                 (render tile))))
-    (draw-image (position-of key) 'key)
+    (if (not (in-inventory-p key))
+        (draw-image (position-of key) 'key))
     (if (open-p chest)
         (draw-image (position-of chest) 'chest
                     :origin (vec2 32 0)
