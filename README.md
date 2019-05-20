@@ -32,3 +32,13 @@ Run
 WASD - Movement
 
 Spacebar - Action
+
+### Credits
+
+Player and Skeleton sprites are from the Universal LPC Character Generator - http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/
+
+The Key sprite is from BizmasterStudios - https://opengameart.org/content/key-icons
+
+The Chest sprite is from Blarumyrran - https://opengameart.org/content/modified-32x32-treasure-chest
+
+The Fog texture is from Santoniche - https://opengameart.org/content/mist
