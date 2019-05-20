@@ -1,12 +1,23 @@
 ;;;; world.lisp
 (cl:in-package :deserted)
 
+(defclass key (positionable)
+  ((size :initform (vec2 50 50))
+   (in-inventory-p :initform nil :accessor in-inventory-p)))
+
+(defclass chest (positionable)
+  ((size :initform (vec2 32 32))
+   (open-p :initform nil :accessor open-p)))
+
 (defclass world ()
   ((map :initarg :map :reader map-of)
    (grid :initarg :grid)
    (skeleton-spawn-positions :initarg :skeleton-spawn-positions)
    (enemies :reader enemies-of)
    (player-initial-position :initarg :player-initial-position)
+   (key-positions :initarg :key-positions)
+   (key :reader key-of)
+   (chest :reader chest-of)
    (player :reader player-of)))
 
 (defmethod initialize-instance :after ((this world) &key)
@@ -14,10 +25,16 @@
 
 (defun clear-world (world)
   (with-slots (map grid player player-initial-position
-                   enemies skeleton-spawn-positions)
+                   enemies skeleton-spawn-positions
+                   key-positions key chest)
       world
     (setf player (make-instance 'player :position player-initial-position)
-          enemies (make-array 0 :fill-pointer 0 :adjustable t))
+          enemies (make-array 0 :fill-pointer 0 :adjustable t)
+          key (make-instance 'key :position (aref key-positions (random (length key-positions))))
+          chest (make-instance 'chest :position (vec2
+                                                 (+ (x (position-of player)) 32)
+                                                 (y (position-of player)))))
+    (format t "~%key position: ~a" (position-of key))
     (let ((real-map-height
            (*
             (height-of map)
@@ -42,12 +59,20 @@
          (vector-push-extend (make-instance 'skeleton-spear :position spawn-position) enemies))))
 
 (defmethod render ((this world))
-  (with-slots (map grid player enemies) this
+  (with-slots (map grid player enemies key chest) this
     ;; Will do the rendering from the bottom-left corner of screen
     (loop for y downfrom (- (height-of map) 1) to 0 do
          (loop for x from 0 below (width-of map) do
               (let ((tile (aref grid y x)))
                 (render tile))))
+    (draw-image (position-of key) 'key)
+    (if (open-p chest)
+        (draw-image (position-of chest) 'chest
+                    :origin (vec2 32 0)
+                    :width 32 :height 32)
+        (draw-image (position-of chest) 'chest
+                    :origin (vec2 0 0)
+                    :width 32 :height 32))
     (loop for enemy across enemies do
          (when (>= (y (position-of enemy)) (y (position-of player)))
            (render enemy)))

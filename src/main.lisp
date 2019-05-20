@@ -3,6 +3,9 @@
 
 (register-resource-package :deserted *assets-path*)
 
+(define-image 'key "images/key.png")
+(define-image 'chest "images/chest.png")
+
 (defgame deserted ()
   ((game-state)
    (map :initform nil)
@@ -27,7 +30,9 @@
      'island
      'pirate
      'fog
-     'skeleton-spear)))
+     'skeleton-spear
+     'key
+     'chest)))
 
 (defmethod notice-resources ((this deserted) &rest resource-names)
   (declare (ignore resource-names))
@@ -36,6 +41,7 @@
            (data (data-of layer1))
            (player-initial-position (vec2 0 0))
            (skeleton-spawn-positions (make-array 0 :fill-pointer 0 :adjustable t))
+           (key-positions (make-array 4 :fill-pointer 0))
            (real-map-height
             (*
              (height-of map)
@@ -44,6 +50,8 @@
            (loop for object across (objects-of object-group) do
                 (with-slots (name x y height) object
                   (cond
+                    ((string-equal name "key")
+                     (vector-push (vec2 x (- real-map-height height)) key-positions))
                     ((string-equal name "player_spawn_position")
                      (setf player-initial-position
                            (vec2 x (- real-map-height y height))))
@@ -59,6 +67,7 @@
                                       :map map
                                       :grid grid
                                       :player-initial-position player-initial-position
+                                      :key-positions key-positions
                                       :skeleton-spawn-positions skeleton-spawn-positions)
                  game-state (make-instance 'game
                                            :world world))))))
