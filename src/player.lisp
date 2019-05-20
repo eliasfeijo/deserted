@@ -4,15 +4,19 @@
 (defclass player (renderable movable)
   ((size :initform (vec2 64 64) :reader size-of)
    (velocity :initform (vec2 100 100))
-   (state :initform 'idle)
+   (state :initform 'idle :reader state-of)
    (state-started :initform (real-time-seconds))
    (current-animation :initform *player-idle-south*)))
 
 (defun update-player (player delta-time)
-  (with-slots (state) player
+  (with-slots (state current-animation) player
     (cond
       ((eql state 'moving)
-       (move player delta-time)))))
+       (move player delta-time))
+      ((eql state 'attacking)
+       (when (animation-finished-p
+              current-animation (real-time-seconds))
+         (set-state player 'idle))))))
   
 
 (defun set-state (player new-state)
@@ -21,7 +25,9 @@
       player
     (setf state new-state
           state-started (real-time-seconds)
-          current-animation (resolve-player-animation state direction))))
+          current-animation (resolve-player-animation state direction))
+    (if (eql state 'attacking)
+        (start-animation current-animation state-started))))
 
 (defun resolve-player-animation (state direction)
   (cond

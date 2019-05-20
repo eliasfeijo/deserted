@@ -3,6 +3,12 @@
 
 (defclass game-state () ())
 
+(defmethod press-key ((this game-state) key)
+  (declare (ignore this key)))
+
+(defmethod release-key ((this game-state) key)
+  (declare (ignore this key)))
+
 (defclass resource-preparation (game-state) ())
 
 (defmethod render ((this resource-preparation))
@@ -18,9 +24,14 @@
    (last-updated :initform (real-time-seconds))))
 
 (defmethod press-key ((this game) key)
-  (with-slots (keyboard) this
-    (if (eql key :f5)
-        (setf *dev-mode* (not *dev-mode*)))
+  (with-slots (keyboard world) this
+    (cond
+      ((eql key :f5)
+       (setf *dev-mode* (not *dev-mode*)))
+      ((eql key :space)
+       (if (not (eql (state-of (player-of world))
+                     'attacking))
+           (set-state (player-of world) 'attacking))))
     (press-key keyboard key)))
 
 (defmethod release-key ((this game) key)
@@ -62,11 +73,13 @@
     (labels
         ((update-moving-p-and-direction (keyboard)
            (let ((result (process-movement-input keyboard)))
-             (if (null result)
-                 (set-state (player-of world) 'idle)
-                 (progn
-                   (setf (direction-of (player-of world)) result)
-                   (set-state (player-of world) 'moving))))))
+             (if (not (eql (state-of (player-of world))
+                           'attacking))
+                 (if (null result)
+                     (set-state (player-of world) 'idle)
+                     (progn
+                       (setf (direction-of (player-of world)) result)
+                       (set-state (player-of world) 'moving)))))))
       (setf keyboard (make-instance 'keyboard :on-state-change #'update-moving-p-and-direction)))))
 
 (defmethod act ((this game))
