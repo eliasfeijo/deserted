@@ -25,7 +25,7 @@
               (release-key game-state key)))))
     (prepare-resources
      'island
-     'human-male-female
+     'pirate
      'fog
      'skeleton-spear)))
 

@@ -2,12 +2,12 @@
 (cl:in-package :deserted)
 
 (defclass player (renderable movable)
-  ((size :initform (vec2 32 64) :reader size-of)
+  ((size :initform (vec2 64 64) :reader size-of)
    (velocity :initform (vec2 100 100))))
 
 (defmethod render ((this player))
   (with-slots (position direction size moving-p) this
-    (let* ((anim (resolve-player-animation this))
+    (let* ((anim (resolve-player-moving-animation direction))
 	   (frame (get-frame anim (real-time-seconds)))
 	   (origin (keyframe-origin frame))
 	   (end (keyframe-end frame))
@@ -37,7 +37,7 @@
 			     (+ (- (y position)) (- (y size)))))
 		      (scale-canvas 1 -1)))))
 	(draw-image real-position
-		    'human-male-female
+		    'pirate
 		    :origin origin
 		    :width (- (x end) (x origin))
 		    :height (- (y end) (y origin)))
