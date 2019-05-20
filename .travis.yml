@@ -8,7 +8,7 @@ addons:
 
 env:
   global:
-    - GAMEKIT_SYSTEM_NAME: pong
+    - GAMEKIT_SYSTEM_NAME: deserted
     - GAMEKIT_APPLICATION_PACKAGE: deserted
     - GAMEKIT_APPLICATION_MAIN_CLASS: deserted
     - PATH: ~/bin/:$PATH
