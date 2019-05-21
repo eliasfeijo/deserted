@@ -35,6 +35,8 @@
                                                  (+ (x (position-of player)) 32)
                                                  (y (position-of player)))))
     (format t "~%key position: ~a" (position-of key))
+    (format t "~%map: ~a" map)
+    (format t "~%map tilesets: ~a" (tilesets-of map))
     (let ((real-map-height
            (*
             (height-of map)
