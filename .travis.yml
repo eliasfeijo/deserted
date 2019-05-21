@@ -29,7 +29,7 @@ install:
 
 script:
   - >
-    lisp $HOME/bodge/scripts/build-gamekit-system.lisp
+    lisp $HOME/bodge/scripts/build-experimental-gamekit-system.lisp
     $GAMEKIT_SYSTEM_NAME $GAMEKIT_APPLICATION_PACKAGE $GAMEKIT_APPLICATION_MAIN_CLASS
     $TRAVIS_BUILD_DIR
     $GAMEKIT_BUILD_DIR
