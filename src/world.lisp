@@ -32,7 +32,7 @@
           enemies (make-array 0 :fill-pointer 0 :adjustable t)
           key (make-instance 'key :position (aref key-positions (random (length key-positions))))
           chest (make-instance 'chest :position (vec2
-                                                 (+ (x (position-of player)) 32)
+                                                 (+ (x (position-of player)) (x (size-of player)))
                                                  (y (position-of player)))))
     (let ((real-map-height
            (*

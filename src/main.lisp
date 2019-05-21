@@ -21,7 +21,7 @@
 (defmethod post-initialize :after ((this deserted))
   (with-slots (game-state map) this
     (setf game-state (make-instance 'resource-preparation)
-          map *tmx*)
+          map (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
     (bind-any-button
      (lambda (key state)
        (cond ((eql state :pressed)
@@ -53,12 +53,12 @@
                 (with-slots (name x y height) object
                   (cond
                     ((string-equal name "key")
-                     (vector-push (vec2 x (- real-map-height height)) key-positions))
+                     (vector-push (vec2 x (- real-map-height y)) key-positions))
                     ((string-equal name "player_spawn_position")
                      (setf player-initial-position
-                           (vec2 x (- real-map-height y height))))
+                           (vec2 x (- real-map-height y))))
                     ((string-equal name "skeleton_spawn_position")
-                     (vector-push-extend (vec2 x (- real-map-height y height)) skeleton-spawn-positions))))))
+                     (vector-push-extend (vec2 x (- real-map-height y)) skeleton-spawn-positions))))))
       (setf grid (make-array (list (height-of map) (width-of map)) :initial-contents data))
       (loop for y from 0 below (height-of map) do
            (loop for x from 0 below (width-of map) do
