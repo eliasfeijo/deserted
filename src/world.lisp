@@ -34,9 +34,6 @@
           chest (make-instance 'chest :position (vec2
                                                  (+ (x (position-of player)) 32)
                                                  (y (position-of player)))))
-    (format t "~%key position: ~a" (position-of key))
-    (format t "~%map: ~a" map)
-    (format t "~%map tilesets: ~a" (tilesets-of map))
     (let ((real-map-height
            (*
             (height-of map)
@@ -53,7 +50,7 @@
                        (tileset-image
                         (find-symbol
                          (string-upcase
-                          (name-of (image-of (tileset-of tile)))))))
+                          (name-of (image-of (tileset-of tile)))) :deserted)))
                   (setf
                    (position-of tile) (vec2 position-x position-y)
                    (tileset-image-of tile) tileset-image)))))
