@@ -6,6 +6,8 @@
 (define-image 'key "images/key.png")
 (define-image 'chest "images/chest.png")
 
+(defvar *tmx* (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
+
 (defgame deserted ()
   ((game-state)
    (map :initform nil)
@@ -19,7 +21,7 @@
 (defmethod post-initialize :after ((this deserted))
   (with-slots (game-state map) this
     (setf game-state (make-instance 'resource-preparation)
-          map (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
+          map *tmx*)
     (bind-any-button
      (lambda (key state)
        (cond ((eql state :pressed)
