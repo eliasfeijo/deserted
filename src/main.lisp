@@ -8,6 +8,8 @@
 
 (define-sound 'times-of-unrest "sound/times-of-unrest.wav")
 (define-sound 'bones "sound/bones-and-flesh-movement.flac")
+(define-sound 'punch "sound/punch.ogg")
+(define-sound 'kick "sound/kick.ogg")
 
 (defvar *tmx* (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
 
@@ -32,6 +34,8 @@
              ((eql state :released)
               (release-key game-state key)))))
     (prepare-resources
+     'punch
+     'kick
      'bones
      'times-of-unrest
      'island

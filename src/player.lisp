@@ -20,6 +20,7 @@
         ((eql state 'attacking)
          (when (animation-finished-p
                 current-animation (real-time-seconds))
+           (play-sound 'punch)
            (set-state player 'idle)
            (loop for enemy across (enemies-of world) do
                 (if (intersect-p

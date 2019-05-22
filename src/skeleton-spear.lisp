@@ -69,6 +69,7 @@
                                     (y player-position)
                                     (x player-size)
                                     (y player-size))))
+                 (play-sound 'kick)
                  (if (intersect-p
                       (resolve-spear-skeleton-attack-rect skeleton)
                       player-rect)
