@@ -28,6 +28,11 @@
                    enemies skeleton-spawn-positions
                    key-positions key chest)
       world
+    (stop-sound 'times-of-unrest)
+    (play-sound 'scary)
+    (ge.ng:schedule (ge.ng:instantly ()
+                  (play-sound 'times-of-unrest :looped-p t))
+                :wait 5)
     (setf player (make-instance 'player :position player-initial-position)
           enemies (make-array 0 :fill-pointer 0 :adjustable t)
           key (make-instance 'key :position (aref key-positions (random (length key-positions))))
