@@ -163,6 +163,7 @@
 
 (defun kill-enemy (enemy)
   (with-slots (state current-animation) enemy
+    (play-sound 'die)
     (setf state 'dead
           current-animation *skeleton-buried*)))
 

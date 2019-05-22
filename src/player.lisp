@@ -38,6 +38,7 @@
       (setf hp (- hp damage))
       (if (<= hp 0)
           (progn
+            (play-sound 'man-dying)
             (set-state player 'dead))))))
 
 (defun resolve-player-attack-rect (player)
