@@ -6,6 +6,8 @@
 (define-image 'key "images/key.png")
 (define-image 'chest "images/chest.png")
 
+(define-sound 'times-of-unrest "sound/times-of-unrest.wav")
+
 (defvar *tmx* (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
 
 (defgame deserted ()
@@ -29,6 +31,7 @@
              ((eql state :released)
               (release-key game-state key)))))
     (prepare-resources
+     'times-of-unrest
      'island
      'pirate
      'fog
@@ -39,6 +42,7 @@
 (defmethod notice-resources ((this deserted) &rest resource-names)
   (declare (ignore resource-names))
   (with-slots (game-state map grid world) this
+    (play-sound 'times-of-unrest :looped-p t)
     (let* ((layer1 (aref (layers-of map) 0))
            (data (data-of layer1))
            (player-initial-position (vec2 0 0))
