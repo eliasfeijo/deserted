@@ -2,7 +2,8 @@
 (in-package :deserted)
 
 (defclass skeleton-spear (movable renderable)
-  ((velocity :initform (vec2 60 60))
+  ((velocity :initform (let ((speed (min 80 (random 150))))
+                         (vec2 speed speed)))
    (size :initform (vec2 64 64) :reader size-of)
    (vision-range :initform 50)
    (aggro :initform nil)
