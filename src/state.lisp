@@ -122,7 +122,10 @@
                               (y (position-of (chest-of world)))
                               (x (size-of (chest-of world)))
                               (y (size-of (chest-of world)))))
-                (setf game-over t)))
+                (progn
+                  (stop-sound 'times-of-unrest)
+                  (play-sound 'win)
+                  (setf game-over t))))
         (update-player (player-of world) world delta-time)
         (loop for enemy across (enemies-of world) do
              (update-skeleton-spear enemy world delta-time))

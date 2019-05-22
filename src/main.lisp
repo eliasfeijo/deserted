@@ -13,6 +13,7 @@
 (define-sound 'scary "sound/scary.ogg")
 (define-sound 'die "sound/die.ogg")
 (define-sound 'man-dying "sound/man-dying.ogg")
+(define-sound 'win "sound/win.ogg")
 
 (defvar *tmx* (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
 
@@ -37,6 +38,7 @@
              ((eql state :released)
               (release-key game-state key)))))
     (prepare-resources
+     'win
      'die
      'man-dying
      'scary
