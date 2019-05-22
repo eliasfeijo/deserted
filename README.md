@@ -6,7 +6,7 @@ Binaries available at [releases](https://github.com/eliasfeijo/deserted/releases
 
 ## Requirements
 
-* OpenGL 3.3+
+* OpenGL 2.1+
 * 64-bit (x86_64) Windows, GNU/Linux or macOS
 
 ## Compile it yourself
