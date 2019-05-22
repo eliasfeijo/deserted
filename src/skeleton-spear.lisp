@@ -35,6 +35,7 @@
            (setf state 'rising
                  state-started (real-time-seconds)
                  current-animation *skeleton-rise*)
+           (play-sound 'bones)
            (start-animation current-animation state-started))
           ;;; rising -> moving
           ((eql state 'rising)

@@ -7,6 +7,7 @@
 (define-image 'chest "images/chest.png")
 
 (define-sound 'times-of-unrest "sound/times-of-unrest.wav")
+(define-sound 'bones "sound/bones-and-flesh-movement.flac")
 
 (defvar *tmx* (parse-tmx (merge-pathnames "map/map1.tmx" *assets-path*)))
 
@@ -31,6 +32,7 @@
              ((eql state :released)
               (release-key game-state key)))))
     (prepare-resources
+     'bones
      'times-of-unrest
      'island
      'pirate
