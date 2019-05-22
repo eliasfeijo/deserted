@@ -1,3 +1,4 @@
+(cl:pushnew :bodge-gl2 cl:*features*)
 (asdf:defsystem "deserted"
     :description "Game made for Mini Jam 2019-05-17"
     :version "0.0.1"
